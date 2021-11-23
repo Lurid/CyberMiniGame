@@ -373,3 +373,189 @@ table {
 }
 
 
+
+ html {
+  
+  --sizeTC: 36px;
+  --brdr: 2px;
+  
+  --vl1: calc(0% + var(--brdr));
+  --vl2: calc(100% - var(--brdr));
+  
+  --vg1: 15.625%;
+  --vg2: 31.25%;
+  
+  --vj1: calc(50% - var(--vg2));
+  --vj2: calc(50% - var(--vg1));
+  --vj3: calc(50% + var(--vg1));
+  --vj4: calc(50% + var(--vg2));
+  
+  --cp: polygon(
+  0% 0%, 
+  var(--vl1) var(--vl1), var(--vl1) var(--vj1),
+  0% var(--vj1), 0% var(--vj2), 
+  var(--vl1) var(--vj2), var(--vl1) var(--vj3), 
+  0% var(--vj3), 0% var(--vj4), 
+  var(--vl1) var(--vj4), var(--vl1) var(--vl2),
+  
+  var(--vj1) var(--vl2), 
+  var(--vj1) 100%, var(--vj2) 100%, 
+  var(--vj2) var(--vl2), var(--vj3) var(--vl2), 
+  var(--vj3) 100%, var(--vj4) 100%, 
+  var(--vj4) var(--vl2), 
+  var(--vl2) var(--vl2), 
+  
+  var(--vl2) var(--vj4), 100% var(--vj4),
+  100% var(--vj3), var(--vl2) var(--vj3),
+  var(--vl2) var(--vj2), 100% var(--vj2),
+  100% var(--vj1), var(--vl2) var(--vj1),
+  var(--vl2) var(--vl1), 
+  
+  var(--vj4) var(--vl1), 
+  var(--vj4) 0%, var(--vj3) 0%, 
+  var(--vj3) var(--vl1), var(--vj2) var(--vl1),
+  var(--vj2) 0%, var(--vj1) 0%, 
+  var(--vj1) var(--vl1), 
+  var(--vl1) var(--vl1),
+  
+  
+  0% 0%, 100% 0%, 100% 100%, 0% 100%
+  );
+  
+  --vj-1: calc(50% - var(--vg1));
+  --vj-2: calc(50% - var(--vg1));
+  --vj-3: calc(50% + var(--vg1));
+  --vj-4: calc(50% + var(--vg1));
+  
+  --cp2: polygon(
+  0% 0%, 
+  var(--vl1) var(--vl1), var(--vl1) var(--vj-1),
+  0% var(--vj-1), 0% var(--vj-2), 
+  var(--vl1) var(--vj-2), var(--vl1) var(--vj-3), 
+  0% var(--vj-3), 0% var(--vj-4), 
+  var(--vl1) var(--vj-4), var(--vl1) var(--vl2),
+  
+  var(--vj-1) var(--vl2), 
+  var(--vj-1) 100%, var(--vj-2) 100%, 
+  var(--vj-2) var(--vl2), var(--vj-3) var(--vl2), 
+  var(--vj-3) 100%, var(--vj-4) 100%, 
+  var(--vj-4) var(--vl2), 
+  var(--vl2) var(--vl2), 
+  
+  var(--vl2) var(--vj-4), 100% var(--vj-4),
+  100% var(--vj-3), var(--vl2) var(--vj-3),
+  var(--vl2) var(--vj-2), 100% var(--vj-2),
+  100% var(--vj-1), var(--vl2) var(--vj-1),
+  var(--vl2) var(--vl1), 
+  
+  var(--vj-4) var(--vl1), 
+  var(--vj-4) 0%, var(--vj-3) 0%, 
+  var(--vj-3) var(--vl1), var(--vj-2) var(--vl1),
+  var(--vj-2) 0%, var(--vj-1) 0%, 
+  var(--vj-1) var(--vl1), 
+  var(--vl1) var(--vl1),
+  
+  
+  0% 0%, 100% 0%, 100% 100%, 0% 100%
+  );
+  
+  
+  
+  
+  --brdr-s: 2px;
+  --vll: calc(calc(100% - var(--brdr)) -
+  calc(calc(var(--vj1) - var(--brdr)) / 2));
+  --brdr-h: calc(var(--brdr) / 2);
+  --vll1: calc(var(--vll) + var(--brdr-h));
+  --vll2: calc(var(--vll) - var(--brdr-h));
+  
+  --brdr-d: calc(var(--brdr) + var(--brdr-s));
+  --vlh1: calc(0% + var(--brdr-d));
+  --vlh2: calc(100% - var(--brdr-d));
+  --vlh3: calc(calc(100% - var(--brdr-d)) - var(--brdr-s));
+  
+  --cp-inside: polygon(
+  var(--vlh1) var(--vlh2), 
+  var(--vlh2) var(--vlh2),
+  var(--vlh2) var(--vlh3),
+  var(--vlh1) var(--vlh3)
+  );
+  
+}
+
+.top-cell {
+  position:relative;
+  background-color: transparent;
+  width: var(--sizeTC);
+  height: var(--sizeTC);
+}
+
+.poligontc {
+	position: absolute;
+  top: 0;
+  left: 0;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  background-color: var(--main-color1);
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  box-sizing: border-box;
+  clip-path: var(--cp);
+  
+  transition: var(--main-transition);
+}
+
+.poligontc-focus {
+  background-color: var(--main-color2);
+  clip-path: var(--cp2);
+}
+
+.poligontc2 {
+  content: '';
+  box-sizing: border-box;
+	position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+  background-color: var(--main-color1);
+  clip-path: var(--cp-inside);
+    opacity: 0;
+}
+
+
+
+.top-cell-text {
+	font-family: Rajdhani;
+  font-weight: 500;
+    font-size: 26px;
+    vertical-align: top;
+	width: -webkit-fill-available;
+	height: -webkit-fill-available;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  
+  color: var(--main-color1);
+  box-shadow: 0;
+  
+  transition: var(--second-transition);
+}
+
+.top-cell-text-active {
+  color: var(--main-color2);
+  box-shadow: 0 0 8px 2px var(--main-color2);
+}
+
+
+.top-blink {
+	animation: blink-animation2 1s steps(1, end) infinite;
+}
+
+@keyframes blink-animation2 {
+  50% {
+    opacity: 1;
+  }
+}

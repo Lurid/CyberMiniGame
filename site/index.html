@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>CyberHack</title>
+		
+		<link rel="stylesheet" type="text/css" href="./style/style.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="./style/top-cell.css"/>
+		
+		
+		<script type="text/javascript" src="./js/script.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="./style/blink_style.css"/>
+		<script type="text/javascript" src="./js/jquery.min.js"></script>
+		<script type="text/javascript" src="./js/blink_script.js"></script>
+		
+	</head>
+	
+	<body onselectstart="return false">
+		<div style="display: none; content: 'prefab place';">
+		<table>
+		
+		<tr id="field_row_prefab" class="field_back_row_td_p"><td class="field_back_row_td"></td></tr>
+		
+		<tr>
+		
+		<td id="field_col_prefab" class="field_back_col_td_p">
+		<div class="field_back_col_td tri-table"></div></td>
+		
+		<td id="field_cell_prefab" class="ground_cell" style="content: '';" onmouseenter="mouseenterF(event)" onmouseleave="mouseleaveF(event)" onclick="mouseclickF(event)">
+		<div class="cell_b_border"></div>
+		<div class="cell_s_border"></div>
+		</td>
+		
+		<td id="field_top_cell_prefab"><div class="top-cell">
+		<div class="top-cell-text"></div>
+		<div class="poligontc"></div>
+		<div class="poligontc2 /*top-blink*/"></div>
+		</div></td>
+		
+		<td id="arrow_top_prefab"><div class="tri-cell"><div class="tri-poligon ar_hor r0"><div class="tri-poligon-final"></div></div></div></td>
+		<td id="arrow_bottom_prefab"><div class="tri-cell"><div class="tri-poligon ar_hor r2"><div class="tri-poligon-final"></div></div></div></td>
+		
+		</tr>
+		
+		<tr id="arrow_left_prefab"><td><div class="tri-cell"><div class="tri-poligon ar_ver r3"><div class="tri-poligon-final"></div></div></div></td></tr>
+		<tr id="arrow_right_prefab"><td><div class="tri-cell"><div class="tri-poligon ar_ver r1"><div class="tri-poligon-final"></div></div></div></td></tr>
+		
+		</table>
+		
+		<div class="tri-cell" id="d"><div class="tri-poligon"></div></div>
+		
+		</div>
+		<table class="container">
+		<tbody class="brdry">
+		<tr>
+		
+			<td colspan="2" style="border: 0; padding: 0; margin: 0;" class="brdry">
+			<table style="width: -webkit-fill-available; margin: 0px; border: 0; margin: -9px; border-spacing: 9px;">
+				<tr style="margin: 0; border-spacing: 0; padding: 0;">
+					<td style="width: auto; padding: 0 7px;" class="brdry">CLOSE TIMER:</td>
+					<td id="timer_text" style="width: 25%;" class="brdry">
+					
+					<div style="
+					margin: auto; 
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: -webkit-fill-available;
+					">
+					
+					<div id="timer_text1" style="
+    				text-align: right;
+    				width: -webkit-fill-available;"
+					>3</div>
+					
+					<div style="
+    				text-align: center;
+    				width: 6px;
+    				align-items: center;
+    				align-content: center;"
+					>.</div>
+					
+					<div id="timer_text2" style="
+    				text-align: left;
+					width: -webkit-fill-available;"
+					>0</div>
+					
+					</div>
+					
+					</td>
+				</tr>
+			
+			<tr>
+				<td colspan="2" style="height: 12px; padding: 0; border-top: 0; padding-top: 0px;" class="brdry">
+					<div id="progress_bar" style="width: 100%; height: 100%; background: linear-gradient(0deg, var(--main-color1) 10%, transparent 100%); margin: 0;"/>
+				</td>
+			</tr>
+			</table >
+			</td >
+			
+			<td rowspan="1" class="brdry">
+				<table style="border-spacing: 9px; margin: 0;">
+					<tr id="field_top_cell_parent"/>
+				</table>
+			</td>
+			
+		</tr>
+		
+			<tr>
+				<td rowspan="1" colspan="2" class="mytable_container brdry">
+					<!-- <table id="field_cols_parent" class="field_back_rowsss"></table> -->
+					
+					<table class="in_field_table" style="visibility: visible;"><tbody>
+					<tr><td style="width: var(--cell-size); height: var(--cell-size);"></td><td>
+						<table class="tri-table"><tbody>
+						<tr id="arrow_top">
+						
+						
+						
+						</tr></tbody></table></td><td></td></tr><tr><td>
+						<table class="tri-table">
+						<tbody id="arrow_left">
+						
+						
+						
+						</tbody></table></td><td></td><td>
+						<table  class="tri-table">
+						<tbody id="arrow_right">
+						
+						
+						
+						</tbody></table></td></tr><tr><td></td><td>
+						<table class="tri-table"><tbody>
+						<tr id="arrow_bottom">
+						
+						
+						
+						</tr>
+						</tbody></table>
+					</td><td style="width: var(--cell-size); height: var(--cell-size);"></td></tr>
+					</tbody></table>
+					
+					<!-- 
+					<div id="field_Path_parent" class="in_field_table">
+					<table id="field_Path_parent" class="in_field_table" 
+					style="background-color: red; opacity: 0.3;"></table>
+					<table id="field_Path_parent" class="in_field_table"
+					style="background-color: green; opacity: 0.3;"></table>
+					<table id="field_Path_parent" class="in_field_table"
+					style="background-color: blue; opacity: 0.3;"></table>
+					</div>
+					-->
+					
+					<table id="field_rows_parent" class="in_field_table field_back_row_table"></table>
+					 <table id="field_cols_parent" class="in_field_table field_back_col_table"></table>
+					<table id="field_cells_parent" class="ground_table"></table>
+				</td>
+				<td class="brdry" style="width: 480px; vertical-align: top;">
+					
+					<table class="brdry RP-cell-text" style="
+					border-spacing: 5px 0; 
+					padding: 9px 4px; 
+					margin: 9px;
+					box-sizing: border-box; 
+					width: -webkit-fill-available; 
+					visibility: visible; /* hidden */"><tbody>
+					<tr style="height: 69px;">
+					<td style="
+					width: 32px; 
+					background: var(--main-color4);
+					height: inherit;
+					position: relative;
+					text-align: center;
+					margin: -20px;
+					vertical-align: top;
+					content: '0';
+					" onmouseenter="mouseenterWT(event)" onmouseleave="mouseleaveWT(event)" ><div style="margin: -1px 0 0 2px">1C</div></td>
+					<td style="background: red;"></td><td style="background: red;"></td></tr>
+					<tr style="height: 69px;">
+					<td style="width: -webkit-fill-available; background: lime;"></td></tr>
+					<tr style="height: 69px;">
+					<td style="background: cyan;"></td></tr>
+					</tbody></table>
+					
+					
+					<!-- <div class="cursooor"/> -->
+				
+				</td>
+			</tr>
+			<tr>
+					<td colspan="2" class="brdry">
+						<input type="text" class="table_size" value="6">
+					</td>
+					<td class="brdry">
+						<input type="submit" class="submit" onclick="recreate_table()" value="GENERATE">
+					</td>
+			</tr>
+		</tbody>
+		</table>
+	</body>
+</html>

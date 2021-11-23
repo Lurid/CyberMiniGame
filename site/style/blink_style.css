@@ -1,0 +1,37 @@
+#cursor23 {
+    float: left;
+    width: 28px;
+    height: 2px;
+    background: #D0ED57;
+	
+	/* id="cursor" */
+	
+	/* steps(2) */
+}
+@keyframes blink-animation-before {
+  0% {
+  }
+
+  10% {
+  }
+
+  50% {
+	box-shadow: 0 0 18px 4px var(--main-color2);
+  }
+
+  60% {
+	box-shadow: 0 0 18px 4px var(--main-color2);
+  }
+
+  100% {
+  }
+}
+
+
+.cursooor {
+    float: left;
+    width: 28px;
+    height: 2px;
+    background: #D0ED57;
+	animation: blink-animation2 1s steps(1, end) infinite;
+}

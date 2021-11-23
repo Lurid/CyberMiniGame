@@ -1,14 +1,4 @@
 @font-face {
-  font-family: Rajdhani-SemiBold;
-  src: url("./fonts/Rajdhani-SemiBold.ttf");
-}
-
-@font-face {
-  font-family: Rajdhani-Medium;
-  src: url("./fonts/Rajdhani-Medium.ttf");
-}
-
-@font-face {
   font-family: BlenderMedium;
   src: url("./fonts/BlenderPro-Medium.ttf");
 }
@@ -52,7 +42,8 @@ body {
   );
   
   background-color: var(--bg-color);
-  font-family: Rajdhani-SemiBold;
+  font-family: Rajdhani;
+  font-weight: 600;
   font-size: 29px;
   cursor: default;
 }
@@ -99,7 +90,8 @@ table {
 }
 
 .top-cell-text {
-	font-family: Rajdhani-Medium;
+	font-family: Rajdhani;
+  font-weight: 500;
     font-size: 26px;
     vertical-align: top;
 	margin: 2px;

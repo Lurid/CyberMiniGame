@@ -43,7 +43,7 @@ body {
   
   background-color: var(--bg-color);
   font-family: Rajdhani;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 29px;
   cursor: default;
 }
@@ -56,6 +56,7 @@ input {
   border-style: none;
   font-family: inherit;
   font-size: inherit;
+  font-weight: inherit;
   color: inherit;
   background-color: transparent;
 }
@@ -87,21 +88,6 @@ table {
 .RP-cell-text {
   font-size: 26.5px;
   vertical-align: top;
-}
-
-.top-cell-text {
-	font-family: Rajdhani;
-  font-weight: 500;
-    font-size: 26px;
-    vertical-align: top;
-	margin: 2px;
-	width: -webkit-fill-available;
-	height: -webkit-fill-available;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 8px 4px var(--main-color2);
-  position: absolute;
 }
 
 .brdry {

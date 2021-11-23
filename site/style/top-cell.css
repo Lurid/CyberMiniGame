@@ -46,6 +46,44 @@
   0% 0%, 100% 0%, 100% 100%, 0% 100%
   );
   
+  --vj-1: calc(50% - var(--vg1));
+  --vj-2: calc(50% - var(--vg1));
+  --vj-3: calc(50% + var(--vg1));
+  --vj-4: calc(50% + var(--vg1));
+  
+  --cp2: polygon(
+  0% 0%, 
+  var(--vl1) var(--vl1), var(--vl1) var(--vj-1),
+  0% var(--vj-1), 0% var(--vj-2), 
+  var(--vl1) var(--vj-2), var(--vl1) var(--vj-3), 
+  0% var(--vj-3), 0% var(--vj-4), 
+  var(--vl1) var(--vj-4), var(--vl1) var(--vl2),
+  
+  var(--vj-1) var(--vl2), 
+  var(--vj-1) 100%, var(--vj-2) 100%, 
+  var(--vj-2) var(--vl2), var(--vj-3) var(--vl2), 
+  var(--vj-3) 100%, var(--vj-4) 100%, 
+  var(--vj-4) var(--vl2), 
+  var(--vl2) var(--vl2), 
+  
+  var(--vl2) var(--vj-4), 100% var(--vj-4),
+  100% var(--vj-3), var(--vl2) var(--vj-3),
+  var(--vl2) var(--vj-2), 100% var(--vj-2),
+  100% var(--vj-1), var(--vl2) var(--vj-1),
+  var(--vl2) var(--vl1), 
+  
+  var(--vj-4) var(--vl1), 
+  var(--vj-4) 0%, var(--vj-3) 0%, 
+  var(--vj-3) var(--vl1), var(--vj-2) var(--vl1),
+  var(--vj-2) 0%, var(--vj-1) 0%, 
+  var(--vj-1) var(--vl1), 
+  var(--vl1) var(--vl1),
+  
+  
+  0% 0%, 100% 0%, 100% 100%, 0% 100%
+  );
+  
+  
   
   
   --brdr-s: 2px;
@@ -70,7 +108,7 @@
 }
 
 .top-cell {
-	position:relative;
+  position:relative;
   background-color: transparent;
   width: var(--sizeTC);
   height: var(--sizeTC);
@@ -87,6 +125,13 @@
   height: -webkit-fill-available;
   box-sizing: border-box;
   clip-path: var(--cp);
+  
+  transition: var(--main-transition);
+}
+
+.poligontc-focus {
+  background-color: var(--main-color2);
+  clip-path: var(--cp2);
 }
 
 .poligontc2 {
@@ -103,6 +148,30 @@
     opacity: 0;
 }
 
+
+
+.top-cell-text {
+	font-family: Rajdhani;
+  font-weight: 500;
+    font-size: 26px;
+    vertical-align: top;
+	width: -webkit-fill-available;
+	height: -webkit-fill-available;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  
+  color: var(--main-color1);
+  box-shadow: 0;
+  
+  transition: var(--second-transition);
+}
+
+.top-cell-text-active {
+  color: var(--main-color2);
+  box-shadow: 0 0 8px 2px var(--main-color2);
+}
 
 
 .top-blink {

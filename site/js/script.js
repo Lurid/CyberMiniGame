@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		field_top_cell_list[i] = {
 			object: obj,
 			text_: obj.querySelector('.top-cell-text'),
+			border_clip: obj.querySelector('.poligontc'),
 			line_: obj.querySelector('.poligontc2')
 		};
 		field_top_cell_parent.appendChild(field_top_cell_list[i].object);
@@ -231,6 +232,24 @@ function new_game(){
 		
 	}
 }
+
+function end_game(){
+		timer_bar.style.animationPlayState = "paused";
+		set_time(timer_interval/1000);
+		clearInterval(timer);
+	
+		active_sheet.innerHTML = ".ground_cell { cursor: default;}";
+			
+		FP = false;
+		FP_enabled = false;
+			
+		if (focused_cell_hovered != null) 
+			focused_cell_hovered.s_border.style.removeProperty('border-color');
+			
+		/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
+			
+		RowColFunc(false, focused_cell_hovered);
+	}
 }
 
 { // events
@@ -259,7 +278,7 @@ function mouseleaveF(event) {
 	}
 }
 
-function RowColFunc(enter_or_exit, selected_obj1) {
+function RowColFunc(enter_or_exit, selected_obj1, by_clicked = false) {
 	let r = selected_obj1.x;
 	if (FP_fixed_side == false) r = FP_fixed_row_number;
 	let c = selected_obj1.y;
@@ -267,11 +286,19 @@ function RowColFunc(enter_or_exit, selected_obj1) {
 	
 	focused_cell_target = field_cells_list_by_coord[r][c];
 	
-		field_top_cell_list[field_top_cell_active].line_.classList.toggle("top-blink");
+	if (FP_enabled != false) {
+	field_top_cell_list[field_top_cell_active].text_.classList.toggle("top-cell-text-active");
+	field_top_cell_list[field_top_cell_active].line_.classList.toggle("top-blink");
+	field_top_cell_list[field_top_cell_active].border_clip.classList.toggle("poligontc-focus");
 	if (enter_or_exit == true) {
 		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[focused_cell_target.value];
+		//field_top_cell_list[field_top_cell_active].text_.style.opacity = '1';
 	} else {
 		field_top_cell_list[field_top_cell_active].text_.innerHTML = "";
+		if (by_clicked == false) {
+			//field_top_cell_list[field_top_cell_active].text_.style.opacity = '0';
+		}
+	}
 	}
 	
 	if ((enter_or_exit == true) & (focused_cell_target.cell.style.pointerEvents != 'none')) {
@@ -339,20 +366,7 @@ function mouseclickF(event) {
 		
 		// остановка таймера 
 		if (timer_interval <= 0) {
-			active_sheet.innerHTML = ".ground_cell { cursor: default;}";
-			
-			FP = false;
-			FP_enabled = false;
-			
-			if (focused_cell_hovered != null) 
-				focused_cell_hovered.s_border.style.removeProperty('border-color');
-			
-				/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
-			
-				RowColFunc(false, focused_cell_hovered);
-				
-				clearInterval(timer);
-				set_time(seconds);
+			end_game();
 		} else {
 			set_time(seconds);
 		}
@@ -365,14 +379,14 @@ function mouseclickF(event) {
 		selected_obj1.s_border.style.color = "var(--main-color5)";
 		selected_obj1.cell.style.pointerEvents = 'none';
 		
-		RowColFunc(false, selected_obj1);
+		RowColFunc(false, selected_obj1, true);
 		
 		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[selected_obj1.value];
 		field_top_cell_list[field_top_cell_active].line_.classList.remove("top-blink");
 		field_top_cell_active++;
 		
-		if (field_top_cell_active > field_top_cell_list.length) { // "или" (проверка возможности закрыть оставшиеся комбинации)
-			
+		if ((field_top_cell_active + 1) > field_top_cell_list.length) { // "или" (проверка возможности закрыть оставшиеся комбинации)
+			end_game();
 		} else {
 		FP_fixed_side = !FP_fixed_side;
 		

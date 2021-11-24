@@ -109,6 +109,37 @@ document.addEventListener("DOMContentLoaded", function(){
 	
 	create_table();
 	
+    combin_body = document.getElementById("combin-body");
+    combin_row_prefab = document.getElementById("combin-row-prefab");
+    combin_cell_prefab = document.getElementById("combin-cell-prefab");
+	
+	let sizes_of_mission = [2,3,4];
+	for(let i= 0; i < 3; i++) {
+		let obj2 = combin_row_prefab.cloneNode(true);
+	
+		let new_mission = {
+			obj: obj2,
+			cells: obj2.querySelector('.combin-cell-parent'),
+			value: []
+		};
+		combin_body.appendChild(new_mission.obj);
+		
+		for(let j = 0; j < sizes_of_mission[i]; j++) {
+			let obj3 = combin_cell_prefab.cloneNode(true);
+			let val = getRandomInt(0, values.length);
+			
+			console.log("1 content("+obj3.style.content+") val("+val+")");
+			
+			//new_mission.value[j] = val;
+			obj3.innerHTML = values[val];
+			obj3.style.content = '\"' + val + '\"' ;
+			
+			console.log("2 content("+obj3.style.content+") val("+val.toString()+")");
+			
+			new_mission.cells.appendChild(obj3);
+		}
+	}
+	
 	
 	
 	//document.querySelector(".ground_cell").style.cursor = "default";
@@ -406,9 +437,7 @@ function mouseenterWT(event) { //watch type
 	if (FP_enabled != false) {
 		let selected_obj = parseInt((event.target.style.content).replace('\"', ''));
 		field_cells_list_by_id[selected_obj].forEach((cell_f) => {
-			if (cell_f.cell == event.target) 
-				cell_f.s_border.style.borderColor = 'var(--main-color3)';
-				else
+			if (cell_f.chosen == false)
 				cell_f.s_border.style.borderColor = 'var(--main-color1)';
 		})
 	}
@@ -463,7 +492,7 @@ function mouseclickF(event) {
 		if (focused_cell_click.chosen == false) {
 		RowColFunc(false, focused_cell_click, true);
 		
-		focused_cell_click.s_border.innerHTML = "(  )";
+		focused_cell_click.s_border.innerHTML = "( " + (field_top_cell_active + 1) + " )";
 		focused_cell_click.s_border.style.color = "var(--main-color4)";
 		focused_cell_click.chosen = true;
 		//focused_cell_click.cell.style.pointerEvents = 'none';

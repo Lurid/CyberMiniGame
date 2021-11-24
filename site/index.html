@@ -22,6 +22,13 @@
 		<div style="display: none; content: 'prefab place';">
 		<table>
 		
+		<tr id="combin-row-prefab">
+		<td style="position: relative; width: 1%; white-space: nowrap;">
+		<table style="border-spacing: 5px 0; margin: -5px; width: max-content;"><tbody><tr class="combin-cell-parent">
+		</tr></tbody></table></td>
+		<td style="background: var(--main-color4);"><div style="height: 50%;">-?-</div>
+		<div style="height: 50%;">-?-</div></td></tr>
+		
 		<tr id="field_row_prefab" class="field_back_row_td_p"><td class="field_back_row_td"></td></tr>
 		
 		<tr>
@@ -39,6 +46,9 @@
 		<div class="poligontc /*poligontc-focus*/"></div>
 		<div class="poligontc2 /*top-blink*/"></div>
 		</div></td>
+		
+		<td id="combin-cell-prefab" class="combin-cell" style="content: '0';" onmouseenter="mouseenterWT(event)" onmouseleave="mouseleaveWT(event)">
+		</td>
 		
 		<td id="arrow_top_prefab"><div class="tri-cell"><div class="tri-poligon ar_hor r0"><div class="tri-poligon-final"></div></div></div></td>
 		<td id="arrow_bottom_prefab"><div class="tri-cell"><div class="tri-poligon ar_hor r2"><div class="tri-poligon-final"></div></div></div></td>
@@ -58,7 +68,7 @@
 		<tr>
 		
 			<td colspan="2" style="border: 0; padding: 0px; margin: 0;" class="brdry">
-			<table style="width: -webkit-fill-available; height: -webkit-fill-available; margin: 0px; border: 0; margin: -8px; border-spacing: 9px;">
+			<table style="width: -webkit-fill-available; height: -webkit-fill-available; margin: 0px; border: 0; margin: -9px; border-spacing: 9px;">
 				<tr style="margin: 0; border-spacing: 0; padding: 0;">
 					<td style="width: auto; padding: 0 9px;" class="brdry">CLOSE TIMER:</td>
 					<td id="timer_text" style="width: 25%;" class="brdry">
@@ -143,46 +153,23 @@
 					</td><td style="width: var(--cell-size); height: var(--cell-size);"></td></tr>
 					</tbody></table>
 					
-					<!-- 
-					<div id="field_Path_parent" class="in_field_table">
-					<table id="field_Path_parent" class="in_field_table" 
-					style="background-color: red; opacity: 0.3;"></table>
-					<table id="field_Path_parent" class="in_field_table"
-					style="background-color: green; opacity: 0.3;"></table>
-					<table id="field_Path_parent" class="in_field_table"
-					style="background-color: blue; opacity: 0.3;"></table>
-					</div>
-					-->
-					
 					<table id="field_rows_parent" class="in_field_table field_back_row_table"></table>
 					 <table id="field_cols_parent" class="in_field_table field_back_col_table"></table>
 					<table id="field_cells_parent" class="ground_table"></table>
 				</td>
 				<td class="brdry" style="width: 480px; vertical-align: top;">
+					<table class="/*brdry*/ RP-cell-text combin-table"><tbody id="combin-body">
 					
-					<table class="brdry RP-cell-text" style="
-					border-spacing: 5px 0; 
-					padding: 9px 4px; 
-					margin: 9px;
-					box-sizing: border-box; 
-					width: -webkit-fill-available; 
-					visibility: visible; /* hidden */"><tbody>
-					<tr style="height: 69px;">
-					<td style="
-					width: 32px; 
-					background: var(--main-color4);
-					height: inherit;
-					position: relative;
-					text-align: center;
-					margin: -20px;
-					vertical-align: top;
-					content: '0';
-					" onmouseenter="mouseenterWT(event)" onmouseleave="mouseleaveWT(event)" ><div style="margin: -1px 0 0 2px">1C</div></td>
-					<td style="background: red;"></td><td style="background: red;"></td></tr>
-					<tr style="height: 69px;">
-					<td style="width: -webkit-fill-available; background: lime;"></td></tr>
-					<tr style="height: 69px;">
-					<td style="background: cyan;"></td></tr>
+					<tr>
+					<td class="brdry" style="position: relative; width: 1%;">
+					<div class="small-text">Комбинации для выполнения:</div></td>
+					
+					<td class="brdry"><div>Награды:</div></td></tr>
+					
+					
+					
+					
+					
 					</tbody></table>
 					
 					

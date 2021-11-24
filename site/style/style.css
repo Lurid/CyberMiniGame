@@ -67,8 +67,9 @@ input.table_size {
   white-space: nowrap;
 }
 
-input.submit {
+.submit-size {
   cursor: pointer;
+  width: -webkit-fill-available;
 }
 
 
@@ -541,7 +542,7 @@ table {
   color: var(--main-color1);
   box-shadow: 0;
   
-  transition: var(--second-transition);
+  transition: var(--main-transition);
 }
 
 .top-cell-text-active {

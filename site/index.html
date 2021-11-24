@@ -57,10 +57,10 @@
 		<tbody class="brdry">
 		<tr>
 		
-			<td colspan="2" style="border: 0; padding: 0; margin: 0;" class="brdry">
-			<table style="width: -webkit-fill-available; margin: 0px; border: 0; margin: -9px; border-spacing: 9px;">
+			<td colspan="2" style="border: 0; padding: 0px; margin: 0;" class="brdry">
+			<table style="width: -webkit-fill-available; height: -webkit-fill-available; margin: 0px; border: 0; margin: -8px; border-spacing: 9px;">
 				<tr style="margin: 0; border-spacing: 0; padding: 0;">
-					<td style="width: auto; padding: 0 7px;" class="brdry">CLOSE TIMER:</td>
+					<td style="width: auto; padding: 0 9px;" class="brdry">CLOSE TIMER:</td>
 					<td id="timer_text" style="width: 25%;" class="brdry">
 					
 					<div style="
@@ -102,7 +102,7 @@
 			</td >
 			
 			<td rowspan="1" class="brdry">
-				<table style="border-spacing: 9px; margin: 0;">
+				<table style="border-spacing: 9px; margin: 0; box-sizing: border-box;">
 					<tr id="field_top_cell_parent"/>
 				</table>
 			</td>
@@ -195,7 +195,15 @@
 						<input type="text" class="table_size" value="6">
 					</td>
 					<td class="brdry">
-						<input type="submit" class="submit" onclick="recreate_table()" value="GENERATE">
+						<input type="submit" class="submit-size" onclick="recreate_table()" value="GENERATE">
+					</td>
+			</tr>
+			<tr  style="visibility: hidden;">
+					<td colspan="2" class="brdry">
+						<input type="text" class="table_size" value="6">
+					</td>
+					<td class="brdry">
+						<input type="submit" class="submit-size" onclick="test_function()" value="test">
 					</td>
 			</tr>
 		</tbody>

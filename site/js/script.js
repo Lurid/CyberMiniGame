@@ -23,15 +23,18 @@ var values = ["1C", "55", "E9", "7A", "BD"];
 var FP = false; //field play
 var FP_enabled = true;
 
-var FP_fixed_side = true;
+var FP_fixed_side = true; // true - col; false - row
 var FP_start_side;
 var FP_fixed_row_number = -1;
 var FP_fixed_col_number = -1;
 
-var field_top_cell_active = 0;
+var buffer_size = 6;
+
+var field_top_cell_active
 
 var focused_cell_hovered;
 var focused_cell_target;
+let focused_cell_click;
 
 var sizee;
 }
@@ -58,7 +61,7 @@ var field_cells_list;
 var field_cells_list_by_id;
 var field_cells_list_by_coord;
 
-var field_top_cell_list = [];
+var field_top_cell_list;
 
 var page_body;
 var active_sheet;
@@ -102,52 +105,16 @@ document.addEventListener("DOMContentLoaded", function(){
 	active_sheet.innerHTML = ".ground_cell { cursor: cell;}"; //default
 	document.head.appendChild(active_sheet);
 	
+	page_body = document.body;
+	
 	create_table();
 	
-	for(let j = 0; j < 4; j++) {
-		for(let i = 0; i < sizee; i++) {
-			let chld = arrow_prefabs[j].cloneNode(true);
-			chld.querySelector('.tri-poligon-final').style.animation = 
-			"1s tyda " + (-1 + (((i + 1) / sizee) / 2)) + "s infinite";
-			arrow_parents[j].appendChild(chld);
-		}
-	}
+	
 	
 	//document.querySelector(".ground_cell").style.cursor = "default";
 	//console.log('style = (' + window.getComputedStyle(document.querySelector(".ground_cell")).cursor + ')'); //removeAttr('cursor')
 	
-	for(let i = 0; i < 4; i++) {
-		let obj = field_top_cell_prefab.cloneNode(true);
-		field_top_cell_list[i] = {
-			object: obj,
-			text_: obj.querySelector('.top-cell-text'),
-			border_clip: obj.querySelector('.poligontc'),
-			line_: obj.querySelector('.poligontc2')
-		};
-		field_top_cell_parent.appendChild(field_top_cell_list[i].object);
-	}
 	
-	FP_start_side = getRandomInt(0, 4);
-	
-	if ((FP_start_side == 0) | (FP_start_side == 2)) FP_fixed_side = false;
-	if ((FP_start_side == 1) | (FP_start_side == 3)) FP_fixed_side = true;
-	if (FP_start_side == 0) FP_fixed_row_number = 0;
-	if (FP_start_side == 2) FP_fixed_row_number = sizee - 1;
-	if (FP_start_side == 1) FP_fixed_col_number = 0;
-	if (FP_start_side == 3) FP_fixed_col_number = sizee - 1;
-    set_time(field_time/1000);
-	
-	
-	
-	for(let j = 0; j < 4; j++) {
-		if (j == FP_start_side)
-			arrow_parents[j].style.visibility = 'visible';
-		else
-			arrow_parents[j].style.visibility = 'hidden';
-	}
-	
-	page_body = document.body;
-	console.log('page_body = (' + page_body + ')');
 	
 	new_game();
 });
@@ -155,9 +122,7 @@ document.addEventListener("DOMContentLoaded", function(){
 window.addEventListener('resize', function(event) {
 	page_body.style.marginLeft = "-" + (page_body.clientWidth % 2) + "px";
 }, true);
-}
 
-{ // new game
 function create_table(){
 	removeAllChildNodes(field_rows_parent);
 	removeAllChildNodes(field_cols_parent);
@@ -194,7 +159,8 @@ function create_table(){
 				s_border: td.children[0],
 				x: i,
 				y: j,
-				value: -1
+				value: -1,
+				chosen: false
 			};
 			field_cells_list[c] = obj;
 			
@@ -203,10 +169,50 @@ function create_table(){
 			c++;
      	}
    	}
+	
+	for(let j = 0; j < 4; j++) {
+		removeAllChildNodes(arrow_parents[j]);
+		for(let i = 0; i < sizee; i++) {
+			let chld = arrow_prefabs[j].cloneNode(true);
+			chld.querySelector('.tri-poligon-final').style.animation = 
+			"1s tyda " + (-1 + (((i + 1) / sizee) / 2)) + "s infinite";
+			arrow_parents[j].appendChild(chld);
+		}
+	}
+	
+	removeAllChildNodes(field_top_cell_parent);
+	field_top_cell_list = [];
+	field_top_cell_active = 0;
+	for(let i = 0; i < buffer_size; i++) {
+		let obj = field_top_cell_prefab.cloneNode(true);
+		field_top_cell_list[i] = {
+			object: obj,
+			text_: obj.querySelector('.top-cell-text'),
+			border_clip: obj.querySelector('.poligontc'),
+			line_: obj.querySelector('.poligontc2')
+		};
+		field_top_cell_parent.appendChild(field_top_cell_list[i].object);
+	}
+}
+}
+
+{ // new game
+function recreate_table(){
+	create_table();
+	new_game();
+}
+
+function test_function(){
+	
 }
 
 function new_game(){
 	field_cells_list_by_id = [];
+	
+	FP = false;
+	FP_enabled = true;
+	
+	active_sheet.innerHTML = ".ground_cell { cursor: cell;}";
 	
 	let type_count = [];
 	
@@ -218,7 +224,7 @@ function new_game(){
 			
 			obj.value = val;
 			
-			if (field_cells_list_by_id[val] == undefined) 
+			if (field_cells_list_by_id[val] == undefined)
 			{
 				field_cells_list_by_id[val] = [];
 				type_count[val] = 0;
@@ -231,87 +237,168 @@ function new_game(){
 		}
 		
 	}
+	
+	FP_start_side = getRandomInt(0, 4);
+	
+	if ((FP_start_side == 0) | (FP_start_side == 2)) FP_fixed_side = false;
+	if ((FP_start_side == 1) | (FP_start_side == 3)) FP_fixed_side = true;
+	if (FP_start_side == 0) FP_fixed_row_number = 0;
+	if (FP_start_side == 2) FP_fixed_row_number = sizee - 1;
+	if (FP_start_side == 1) FP_fixed_col_number = 0;
+	if (FP_start_side == 3) FP_fixed_col_number = sizee - 1;
+    set_time(field_time/1000);
+	
+	timer_bar.style.animation = "0";
+	timer_bar.style.width = '100%';
+	
+	for(let j = 0; j < 4; j++) {
+		if (j == FP_start_side) {
+			arrow_parents[j].style.opacity = '1';
+		}
+		else {
+			arrow_parents[j].style.opacity = '0';
+		}
+	}
+	
+	//стартовое подсвечивание начальной линии
+	strange_func(true);
+	
+	//active_sheet.innerHTML = ".ground_cell { cursor: cell;}";
 }
 
 function end_game(){
-		timer_bar.style.animationPlayState = "paused";
-		set_time(timer_interval/1000);
-		clearInterval(timer);
+	timer_bar.style.animationPlayState = "paused";
+	set_time(timer_interval/1000);
+	clearInterval(timer);
 	
-		active_sheet.innerHTML = ".ground_cell { cursor: default;}";
+	active_sheet.innerHTML = ".ground_cell { cursor: default;}";
 			
-		FP = false;
-		FP_enabled = false;
+	/*if (focused_cell_hovered != null) 
+		focused_cell_hovered.s_border.style.removeProperty('border-color');*/
 			
-		if (focused_cell_hovered != null) 
-			focused_cell_hovered.s_border.style.removeProperty('border-color');
-			
-		/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
-			
-		RowColFunc(false, focused_cell_hovered);
+	/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
+	
+	RowColFunc(false, focused_cell_hovered, true);
+	//RowColTopCell(false);
+	strange_func(false);
+	
+	FP = false;
+	FP_enabled = false;
+	
+	//active_sheet.innerHTML = ".ground_cell { cursor: default; pointer-events: 'none';}";
+	
+	console.log('game is ended 6 !');
+}
+
+function strange_func (enable) {
+	let r = 0, c = 0;
+	let r_state = false, c_state = false;
+	if (FP_fixed_side == false) {
+		r = FP_fixed_row_number;
+		r_state = enable;
+	} else {
+		c = FP_fixed_col_number;
+		c_state = enable;
 	}
+	RowColSimpleFunction(r, c, r_state, c_state);
+}
+
 }
 
 { // events
 
 function mouseenterF(event) {
 	if (FP_enabled != false) {
-	focused_cell_hovered = field_cells_list[parseInt((event.target.style.content).replace('\"', ''))];
-	focused_cell_hovered.s_border.style.borderColor = 'var(--main-color2)';
-	
-	/* добавление стиля для мигания ячеек, и включение подсвечивания ячеек в правом меню */
-	
-	RowColFunc(true, focused_cell_hovered);
+		focused_cell_hovered = field_cells_list[parseInt((event.target.style.content).replace('\"', ''))];
+		RowColFunc(true, focused_cell_hovered);
 	}
 }
 
 function mouseleaveF(event) {
 	if (FP_enabled != false) {
-	focused_cell_hovered = field_cells_list[parseInt((event.target.style.content).replace('\"', ''))];
-	focused_cell_hovered.s_border.style.removeProperty('border-color');
-	
-	/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
-	
-	//focused_cell_hovered.b_border.style.removeProperty('opacity');
-	
-	RowColFunc(false, focused_cell_hovered);
+		focused_cell_hovered = field_cells_list[parseInt((event.target.style.content).replace('\"', ''))];
+		RowColFunc(false, focused_cell_hovered);
 	}
 }
 
 function RowColFunc(enter_or_exit, selected_obj1, by_clicked = false) {
+	
+	if (enter_or_exit == true) 
+	{ selected_obj1.s_border.style.borderColor = 'var(--main-color2)'; }
+	else
+	{ selected_obj1.s_border.style.removeProperty('border-color'); }
+	
 	let r = selected_obj1.x;
 	if (FP_fixed_side == false) r = FP_fixed_row_number;
 	let c = selected_obj1.y;
 	if (FP_fixed_side == true) c = FP_fixed_col_number;
 	
+	//if (field_cells_list_by_coord[r][c].cell.style.pointerEvents != 'none') {
 	focused_cell_target = field_cells_list_by_coord[r][c];
 	
 	if (FP_enabled != false) {
-	field_top_cell_list[field_top_cell_active].text_.classList.toggle("top-cell-text-active");
-	field_top_cell_list[field_top_cell_active].line_.classList.toggle("top-blink");
-	field_top_cell_list[field_top_cell_active].border_clip.classList.toggle("poligontc-focus");
 	if (enter_or_exit == true) {
-		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[focused_cell_target.value];
-		//field_top_cell_list[field_top_cell_active].text_.style.opacity = '1';
+		RowColTopCell(true, focused_cell_target.value);
 	} else {
-		field_top_cell_list[field_top_cell_active].text_.innerHTML = "";
-		if (by_clicked == false) {
-			//field_top_cell_list[field_top_cell_active].text_.style.opacity = '0';
-		}
-	}
+		RowColTopCell(false);
 	}
 	
-	if ((enter_or_exit == true) & (focused_cell_target.cell.style.pointerEvents != 'none')) {
-	if (FP_enabled == true) {
-	focused_cell_target.b_border.style.opacity = '1';
-	field_rows_list[r].style.opacity = '1';
-	field_cols_list[c].style.opacity = '1';
+	if (enter_or_exit == true && focused_cell_target.chosen == false) {
+		focused_cell_target.b_border.style.opacity = '1';
 	}
-	} else {
-	focused_cell_target.b_border.style.removeProperty('opacity');
-	field_rows_list[r].style.removeProperty('opacity');
-	field_cols_list[c].style.removeProperty('opacity');
+	else {
+		focused_cell_target.b_border.style.removeProperty('opacity');
 	}
+	RowColBackground(enter_or_exit, r, c, by_clicked, focused_cell_target.chosen);
+	}
+	
+	
+	//}
+}
+
+function RowColTopCell(enter_or_exit, value = -1) {
+	if ((field_top_cell_active + 1) < field_top_cell_list.length) {
+		if (enter_or_exit == true & value != -1)
+			field_top_cell_list[field_top_cell_active].text_.innerHTML = values[value];
+		else
+			field_top_cell_list[field_top_cell_active].text_.innerHTML = "";
+		field_top_cell_list[field_top_cell_active].text_.classList.toggle("top-cell-text-active", enter_or_exit);
+		field_top_cell_list[field_top_cell_active].line_.classList.toggle("top-blink", enter_or_exit);
+		field_top_cell_list[field_top_cell_active].border_clip.classList.toggle("poligontc-focus", enter_or_exit);
+	}
+}
+
+function RowColBackground(enter_or_exit, r, c, by_clicked, is_chosen) {
+	if (FP_enabled != false) {
+	if ((enter_or_exit == true)) {
+		if (is_chosen != true) {
+			RowColSimpleFunction(r, c, true, true);
+		}
+	} else 
+	{
+		if (by_clicked == true) 
+				RowColSimpleFunction(r, c, false, false);
+		 else {
+			if(FP_fixed_side == true) 
+				RowColSimpleFunction(r, c, false, true);
+			 else 
+				RowColSimpleFunction(r, c, true, false);
+			
+		}
+		
+	}
+	}
+}
+
+function RowColSimpleFunction(r, c, r_state, c_state) {
+	if (r_state == false)
+		field_rows_list[r].style.removeProperty('opacity');
+	else
+		field_rows_list[r].style.opacity = '1';
+	if (c_state == false)
+		field_cols_list[c].style.removeProperty('opacity');
+	else
+		field_cols_list[c].style.opacity = '1';		
 }
 
 	
@@ -344,7 +431,7 @@ function mouseclickF(event) {
 	let c = selected_obj.y;
 	if (FP_fixed_side == true) c = FP_fixed_col_number;
 	
-	let selected_obj1 = field_cells_list_by_coord[r][c];
+	focused_cell_click = field_cells_list_by_coord[r][c];
 	
 	
 	if (FP == false & FP_enabled == true) { // start timer action
@@ -362,8 +449,6 @@ function mouseclickF(event) {
 		timer = setInterval(function () {
 		let seconds = timer_interval/1000;
 		
-		
-		
 		// остановка таймера 
 		if (timer_interval <= 0) {
 			end_game();
@@ -375,27 +460,31 @@ function mouseclickF(event) {
 	}
 	
 	if (FP == true & FP_enabled == true) {
-		selected_obj1.s_border.innerHTML = "(  )";
-		selected_obj1.s_border.style.color = "var(--main-color5)";
-		selected_obj1.cell.style.pointerEvents = 'none';
+		if (focused_cell_click.chosen == false) {
+		RowColFunc(false, focused_cell_click, true);
 		
-		RowColFunc(false, selected_obj1, true);
+		focused_cell_click.s_border.innerHTML = "(  )";
+		focused_cell_click.s_border.style.color = "var(--main-color4)";
+		focused_cell_click.chosen = true;
+		//focused_cell_click.cell.style.pointerEvents = 'none';
 		
-		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[selected_obj1.value];
+		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[focused_cell_click.value];
 		field_top_cell_list[field_top_cell_active].line_.classList.remove("top-blink");
 		field_top_cell_active++;
 		
 		if ((field_top_cell_active + 1) > field_top_cell_list.length) { // "или" (проверка возможности закрыть оставшиеся комбинации)
+			console.log('game is ended by end of buffer');
 			end_game();
 		} else {
 		FP_fixed_side = !FP_fixed_side;
 		
 		if (FP_fixed_side == false) {
-			FP_fixed_row_number = selected_obj1.x;
+			FP_fixed_row_number = focused_cell_click.x;
 		} else {
-			FP_fixed_col_number = selected_obj1.y;
+			FP_fixed_col_number = focused_cell_click.y;
 		}
 		RowColFunc(true, selected_obj);
+		}
 		}
 	} 	
 }

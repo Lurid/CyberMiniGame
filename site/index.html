@@ -5,17 +5,17 @@
 		<meta charset="utf-8">
 		<title>CyberHack</title>
 		
-		<link rel="stylesheet" type="text/css" href="./style/style.css"/>
-		
-		
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600&display=swap">
+		
+		<link rel="stylesheet" type="text/css" href="./style/style.css"/>
 		
 		<script type="text/javascript" src="./js/script.js"></script>
 		
+		<!--
 		<link rel="stylesheet" type="text/css" href="./style/blink_style.css"/>
 		<script type="text/javascript" src="./js/jquery.min.js"></script>
 		<script type="text/javascript" src="./js/blink_script.js"></script>
-		
+		-->
 	</head>
 	
 	<body onselectstart="return false">
@@ -24,10 +24,12 @@
 		
 		<tr id="combin-row-prefab">
 		<td style="position: relative; width: 1%; white-space: nowrap;">
-		<table style="border-spacing: 5px 0; margin: -5px; width: max-content;"><tbody><tr class="combin-cell-parent">
+		<table class="combin-table-prefab"><tbody><tr class="combin-cell-parent">
 		</tr></tbody></table></td>
-		<td style="background: var(--main-color4);"><div style="height: 50%;">-?-</div>
-		<div style="height: 50%;">-?-</div></td></tr>
+		<td style="background: var(--main-color3);" class="misson-text1">
+		<div style="height: 50%;"><!--Не продумано--></div>
+		<div style="height: 50%;" id="combin-text1">-?-</div>
+		</td></tr>
 		
 		<tr id="field_row_prefab" class="field_back_row_td_p"><td class="field_back_row_td"></td></tr>
 		
@@ -36,7 +38,7 @@
 		<td id="field_col_prefab" class="field_back_col_td_p">
 		<div class="field_back_col_td tri-table"></div></td>
 		
-		<td id="field_cell_prefab" class="ground_cell" style="content: '';" onmouseenter="mouseenterF(event)" onmouseleave="mouseleaveF(event)" onclick="mouseclickF(event)">
+		<td id="field_cell_prefab" class="ground_cell /*ground_cell_highlight*/" style="content: '';" onmouseenter="mouseenterF(event)" onmouseleave="mouseleaveF(event)" onclick="mouseclickF(event)">
 		<div class="cell_b_border"></div>
 		<div class="cell_s_border"></div>
 		</td>
@@ -47,7 +49,7 @@
 		<div class="poligontc2 /*top-blink*/"></div>
 		</div></td>
 		
-		<td id="combin-cell-prefab" class="combin-cell" style="content: '0';" onmouseenter="mouseenterWT(event)" onmouseleave="mouseleaveWT(event)">
+		<td id="combin-cell-prefab" class="combin-cell /*combin-cell-correct*/" style="content: '0';" onmouseenter="mouseenterWT(event)" onmouseleave="mouseleaveWT(event)">
 		</td>
 		
 		<td id="arrow_top_prefab"><div class="tri-cell"><div class="tri-poligon ar_hor r0"><div class="tri-poligon-final"></div></div></div></td>
@@ -158,13 +160,13 @@
 					<table id="field_cells_parent" class="ground_table"></table>
 				</td>
 				<td class="brdry" style="width: 480px; vertical-align: top;">
-					<table class="/*brdry*/ RP-cell-text combin-table"><tbody id="combin-body">
+					<table class="/*brdry*/ RP-cell-text combin-table-parent"><tbody id="combin-body">
 					
 					<tr>
 					<td class="brdry" style="position: relative; width: 1%;">
 					<div class="small-text">Комбинации для выполнения:</div></td>
 					
-					<td class="brdry"><div>Награды:</div></td></tr>
+					<td class="brdry misson-text1"><div>Награды:</div></td></tr>
 					
 					
 					
@@ -177,6 +179,7 @@
 				
 				</td>
 			</tr>
+			<!--
 			<tr>
 					<td colspan="2" class="brdry">
 						<input type="text" class="table_size" value="6">
@@ -185,12 +188,25 @@
 						<input type="submit" class="submit-size" onclick="recreate_table()" value="GENERATE">
 					</td>
 			</tr>
-			<tr  style="visibility: hidden;">
-					<td colspan="2" class="brdry">
+			-->
+			
+			<!--
+			<tr>
+					<td colspan="2" class="brdry" style="visibility: hidden;">
 						<input type="text" class="table_size" value="6">
 					</td>
 					<td class="brdry">
 						<input type="submit" class="submit-size" onclick="test_function()" value="test">
+					</td>
+			</tr>
+			-->
+			
+			<tr>
+					<td colspan="2" class="brdry" style="visibility: hidden;">
+						<input type="text" class="table_size" value="6">
+					</td>
+					<td class="brdry">
+						<input type="submit" class="submit-size" onclick="new_game_click()" value="Новая игра">
 					</td>
 			</tr>
 		</tbody>

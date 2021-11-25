@@ -21,7 +21,7 @@ var values = ["1C", "55", "E9", "7A", "BD"];
 
 { // field
 var FP = false; //field play
-var FP_enabled = true;
+var FP_enabled = false;
 
 var FP_fixed_side = true; // true - col; false - row
 var FP_start_side;
@@ -113,39 +113,8 @@ document.addEventListener("DOMContentLoaded", function(){
     combin_row_prefab = document.getElementById("combin-row-prefab");
     combin_cell_prefab = document.getElementById("combin-cell-prefab");
 	
-	let sizes_of_mission = [2,3,4];
-	for(let i= 0; i < 3; i++) {
-		let obj2 = combin_row_prefab.cloneNode(true);
-	
-		let new_mission = {
-			obj: obj2,
-			cells: obj2.querySelector('.combin-cell-parent'),
-			value: []
-		};
-		combin_body.appendChild(new_mission.obj);
-		
-		for(let j = 0; j < sizes_of_mission[i]; j++) {
-			let obj3 = combin_cell_prefab.cloneNode(true);
-			let val = getRandomInt(0, values.length);
-			
-			console.log("1 content("+obj3.style.content+") val("+val+")");
-			
-			//new_mission.value[j] = val;
-			obj3.innerHTML = values[val];
-			obj3.style.content = '\"' + val + '\"' ;
-			
-			console.log("2 content("+obj3.style.content+") val("+val.toString()+")");
-			
-			new_mission.cells.appendChild(obj3);
-		}
-	}
-	
-	
-	
 	//document.querySelector(".ground_cell").style.cursor = "default";
 	//console.log('style = (' + window.getComputedStyle(document.querySelector(".ground_cell")).cursor + ')'); //removeAttr('cursor')
-	
-	
 	
 	new_game();
 });
@@ -186,8 +155,8 @@ function create_table(){
 			
 			let obj = {
 				cell: td,
-				b_border: td.children[1],
-				s_border: td.children[0],
+				b_border: td.children[0],
+				s_border: td.children[1],
 				x: i,
 				y: j,
 				value: -1,
@@ -227,6 +196,73 @@ function create_table(){
 }
 }
 
+var my_missions = [];
+function CreateMissions() {
+	let sizes_of_mission = [2,3,4];
+	for(let i= 0; i < 3; i++) {
+		let obj2 = combin_row_prefab.cloneNode(true);
+	
+		let new_mission = {
+			obj: obj2,
+			cells_parent: obj2.querySelector('.combin-cell-parent'),
+			cells: [],
+			value: [],
+			stage: 0,
+			complited: false,
+			
+			text_test: obj2.querySelector('#combin-text1')
+		};
+		combin_body.appendChild(new_mission.obj);
+		
+		for(let j = 0; j < sizes_of_mission[i]; j++) {
+			new_mission.cells[j] = combin_cell_prefab.cloneNode(true);
+			let val = getRandomInt(0, values.length);
+			
+			new_mission.value[j] = val;
+			new_mission.cells[j].innerHTML = values[val];
+			new_mission.cells[j].style.content = '\"' + val + '\"' ;
+			
+			new_mission.cells_parent.appendChild(new_mission.cells[j]);
+		}
+		
+		my_missions[i] = new_mission;
+	}
+}
+
+function MissionsClickEvent(valuee) {
+	field_top_cell_list[field_top_cell_active].text_.innerHTML = values[valuee];
+	field_top_cell_list[field_top_cell_active].line_.classList.remove("top-blink");
+	field_top_cell_active++;
+	
+	my_missions.forEach((missions_a) => {
+		if (missions_a.complited == false) {
+			if (missions_a.value[missions_a.stage] == valuee) {
+				missions_a.cells[missions_a.stage].classList.toggle("combin-cell-correct", true);
+				missions_a.stage++;
+				
+				if (missions_a.stage == missions_a.value.length) {
+					missions_a.complited = true;
+					missions_a.text_test.innerHTML = "Завершено!";
+				}
+			} else {
+				if (missions_a.stage > 0) {
+					missions_a.cells.forEach((cell_a) => {
+						cell_a.classList.toggle("combin-cell-correct", false);
+					});
+					missions_a.stage = 0;
+				}
+			}
+		}
+	});
+}
+
+function DeleteMissions() {
+	my_missions.forEach((missions_d) => {
+		combin_body.removeChild(missions_d.obj);
+	});
+	my_missions = [];
+}
+
 { // new game
 function recreate_table(){
 	create_table();
@@ -238,6 +274,11 @@ function test_function(){
 }
 
 function new_game(){
+	if (FP == false & FP_enabled == true) {
+		end_game();
+	}
+	
+	
 	field_cells_list_by_id = [];
 	
 	FP = false;
@@ -254,6 +295,8 @@ function new_game(){
 			let obj = field_cells_list_by_coord[i][j];
 			
 			obj.value = val;
+			obj.b_border.classList.toggle('ground_cell_text', false);
+			obj.chosen = false;
 			
 			if (field_cells_list_by_id[val] == undefined)
 			{
@@ -264,7 +307,7 @@ function new_game(){
 			field_cells_list_by_id[val][type_count[val]] = obj;
 			type_count[val]++;
 			
-         	obj.s_border.appendChild(document.createTextNode(values[val]));
+         	obj.b_border.innerHTML = values[val];
 		}
 		
 	}
@@ -295,6 +338,16 @@ function new_game(){
 	strange_func(true);
 	
 	//active_sheet.innerHTML = ".ground_cell { cursor: cell;}";
+	
+	DeleteMissions();
+	
+	CreateMissions();
+	
+	field_top_cell_active = 0;
+	
+	field_top_cell_list.forEach((top_cell) => {
+		top_cell.text_.innerHTML = "";
+	});
 }
 
 function end_game(){
@@ -304,14 +357,11 @@ function end_game(){
 	
 	active_sheet.innerHTML = ".ground_cell { cursor: default;}";
 			
-	/*if (focused_cell_hovered != null) 
-		focused_cell_hovered.s_border.style.removeProperty('border-color');*/
-			
 	/* удаление стиля для мигания ячеек, и выключение подсвечивания ячеек в правом меню */
 	
 	RowColFunc(false, focused_cell_hovered, true);
-	//RowColTopCell(false);
-	strange_func(false);
+	
+	strange_func(false, true);
 	
 	FP = false;
 	FP_enabled = false;
@@ -321,7 +371,7 @@ function end_game(){
 	console.log('game is ended 6 !');
 }
 
-function strange_func (enable) {
+function strange_func (enable, extra = false) {
 	let r = 0, c = 0;
 	let r_state = false, c_state = false;
 	if (FP_fixed_side == false) {
@@ -331,12 +381,22 @@ function strange_func (enable) {
 		c = FP_fixed_col_number;
 		c_state = enable;
 	}
+	
+	if (extra == true) {
+		r_state = false;
+		c_state = false;
+	}
+	
 	RowColSimpleFunction(r, c, r_state, c_state);
 }
 
 }
 
 { // events
+
+function new_game_click() {
+	new_game();
+}
 
 function mouseenterF(event) {
 	if (FP_enabled != false) {
@@ -353,11 +413,7 @@ function mouseleaveF(event) {
 }
 
 function RowColFunc(enter_or_exit, selected_obj1, by_clicked = false) {
-	
-	if (enter_or_exit == true) 
-	{ selected_obj1.s_border.style.borderColor = 'var(--main-color2)'; }
-	else
-	{ selected_obj1.s_border.style.removeProperty('border-color'); }
+	selected_obj1.b_border.classList.toggle("ground_cell_border", enter_or_exit);
 	
 	let r = selected_obj1.x;
 	if (FP_fixed_side == false) r = FP_fixed_row_number;
@@ -375,10 +431,10 @@ function RowColFunc(enter_or_exit, selected_obj1, by_clicked = false) {
 	}
 	
 	if (enter_or_exit == true && focused_cell_target.chosen == false) {
-		focused_cell_target.b_border.style.opacity = '1';
+		focused_cell_target.s_border.style.opacity = '1';
 	}
 	else {
-		focused_cell_target.b_border.style.removeProperty('opacity');
+		focused_cell_target.s_border.style.removeProperty('opacity');
 	}
 	RowColBackground(enter_or_exit, r, c, by_clicked, focused_cell_target.chosen);
 	}
@@ -438,15 +494,15 @@ function mouseenterWT(event) { //watch type
 		let selected_obj = parseInt((event.target.style.content).replace('\"', ''));
 		field_cells_list_by_id[selected_obj].forEach((cell_f) => {
 			if (cell_f.chosen == false)
-				cell_f.s_border.style.borderColor = 'var(--main-color1)';
-		})
+				cell_f.b_border.classList.toggle('ground_cell_highlight', true);
+		});
 	}
 }
 function mouseleaveWT(event) {
 	if (FP_enabled != false) {
 		let selected_obj = parseInt((event.target.style.content).replace('\"', ''));
 		field_cells_list_by_id[selected_obj].forEach((cell_f) => {
-				cell_f.s_border.style.removeProperty('border-color');
+				cell_f.b_border.classList.toggle('ground_cell_highlight', false);
 		})
 	}
 }
@@ -492,27 +548,26 @@ function mouseclickF(event) {
 		if (focused_cell_click.chosen == false) {
 		RowColFunc(false, focused_cell_click, true);
 		
-		focused_cell_click.s_border.innerHTML = "( " + (field_top_cell_active + 1) + " )";
-		focused_cell_click.s_border.style.color = "var(--main-color4)";
+		focused_cell_click.b_border.innerHTML = "(" + (field_top_cell_active + 1) + ")";
+		focused_cell_click.b_border.classList.toggle("ground_cell_text", true);
 		focused_cell_click.chosen = true;
 		//focused_cell_click.cell.style.pointerEvents = 'none';
 		
-		field_top_cell_list[field_top_cell_active].text_.innerHTML = values[focused_cell_click.value];
-		field_top_cell_list[field_top_cell_active].line_.classList.remove("top-blink");
-		field_top_cell_active++;
+		MissionsClickEvent(focused_cell_click.value);
 		
 		if ((field_top_cell_active + 1) > field_top_cell_list.length) { // "или" (проверка возможности закрыть оставшиеся комбинации)
 			console.log('game is ended by end of buffer');
 			end_game();
 		} else {
-		FP_fixed_side = !FP_fixed_side;
+			FP_fixed_side = !FP_fixed_side;
 		
-		if (FP_fixed_side == false) {
-			FP_fixed_row_number = focused_cell_click.x;
-		} else {
-			FP_fixed_col_number = focused_cell_click.y;
-		}
-		RowColFunc(true, selected_obj);
+			if (FP_fixed_side == false) {
+				FP_fixed_row_number = focused_cell_click.x;
+			} else {
+				FP_fixed_col_number = focused_cell_click.y;
+			}
+			
+			RowColFunc(true, selected_obj);
 		}
 		}
 	} 	

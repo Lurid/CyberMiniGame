@@ -273,8 +273,9 @@ function test_function(){
 	
 }
 
+var game_created;
 function new_game(){
-	if (FP == false & FP_enabled == true) {
+	if (FP_enabled == true) {
 		end_game();
 	}
 	

@@ -72,7 +72,7 @@
 			<td colspan="2" style="border: 0; padding: 0px; margin: 0;" class="brdry">
 			<table style="width: -webkit-fill-available; height: -webkit-fill-available; margin: 0px; border: 0; margin: -9px; border-spacing: 9px;">
 				<tr style="margin: 0; border-spacing: 0; padding: 0;">
-					<td style="width: auto; padding: 0 9px;" class="brdry misson-text1">Доступное время:</td>
+					<td class="brdry /*misson-text1*/" style="width: auto; padding: 0 9px; text-align: right;">Timer:</td>
 					<td id="timer_text" style="width: 25%;" class="brdry">
 					
 					<div style="
@@ -86,7 +86,7 @@
 					<div id="timer_text1" style="
     				text-align: right;
     				width: -webkit-fill-available;"
-					>3</div>
+					>0</div>
 					
 					<div style="
     				text-align: center;
@@ -164,9 +164,9 @@
 					
 					<tr>
 					<td class="brdry" style="position: relative; width: 1%;">
-					<div class="small-text">Комбинации для выполнения:</div></td>
+					<div class="misson-text1 /*small-text*/">Combs:</div></td>
 					
-					<td class="brdry misson-text1"><div>Статус выполнения:</div></td></tr>
+					<td class="brdry misson-text1"><div>Status:</div></td></tr>
 					
 					
 					
@@ -202,23 +202,21 @@
 			-->
 			
 			<tr>
-					<td colspan="2" class="brdry" style="visibility: hidden;">
-						<input type="text" class="table_size" value="6">
+				<!--
+					<td colspan="0" class="brdry" style="visibility: hidden;">
+						<!- - here was input size - ->
+						
 					</td>
-					<td class="brdry">
-						<input type="submit" class="submit-size" onclick="new_game_click()" value="Новая игра">
+					-->
+					<td class="brdry" colspan="3">
+						<input type="submit" class="submit-size" onclick="new_game_click()" value="New game">
 					</td>
 			</tr>
 		</tbody>
 		</table>
+
+		<input style="visibility: hidden;" type="text" class="table_size" value="6">
 		
-		<footer class="misson-text1" style="
-		position: fixed;
-    text-align: center;
-    bottom: 0;
-    width: -webkit-fill-available;
-    background-color: var(--main-color3);">
-    © 2021 "Lur_id Games Company".  All rights reserved.
-  </footer>
+		<footer class="misson-text1 my-footer">© 2021 "Lur_id Games Company". All rights reserved.</footer>
 	</body>
 </html>

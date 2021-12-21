@@ -6,6 +6,10 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function getRandomFloat(min, max) {
+	return Math.random() * (max - min) + min;
+}
+
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -23,18 +27,18 @@ var values = ["1C", "55", "E9", "7A", "BD"];
 var FP = false; //field play
 var FP_enabled = false;
 
+
 var FP_fixed_side = true; // true - col; false - row
 var FP_start_side;
 var FP_fixed_row_number = -1;
 var FP_fixed_col_number = -1;
 
 var buffer_size = 6;
-
 var field_top_cell_active
 
 var focused_cell_hovered;
 var focused_cell_target;
-let focused_cell_click;
+var focused_cell_click;
 
 var sizee;
 }
@@ -55,8 +59,8 @@ var arrow_prefabs = [];
 }
 	
 { // dynamic
-var field_rows_list;
-var field_cols_list;
+var FRL_C; //field back rows
+var FCL_C; //field back cols
 var field_cells_list;
 var field_cells_list_by_id;
 var field_cells_list_by_coord;
@@ -113,8 +117,53 @@ document.addEventListener("DOMContentLoaded", function(){
     combin_row_prefab = document.getElementById("combin-row-prefab");
     combin_cell_prefab = document.getElementById("combin-cell-prefab");
 	
+	
 	//document.querySelector(".ground_cell").style.cursor = "default";
 	//console.log('style = (' + window.getComputedStyle(document.querySelector(".ground_cell")).cursor + ')'); //removeAttr('cursor')
+
+	/*
+	let my_arrr = [1, 2, 3];
+	console.log("include (2) = " + my_arrr.includes(2));
+	*/
+
+	/*
+	let SF = {
+		list: [],
+		row: [],
+		col: []
+	};
+
+	let k = 0;
+	for(let i = 0; i < sizee; i++) {
+		for(let j = 0; j < sizee; j++) {
+			if (i == 0) {
+				SF.row[j] = [];
+				SF.col[j] = [];
+			}
+			SF.list[k] = {
+				r: i,
+				c: j,
+				value: false,
+				data: []
+			};
+
+			SF.row[i][j] = SF.list[k];
+			SF.col[j][i] = SF.list[k];
+
+			k++;
+		}
+	}
+	
+	console.log("SF.list[0] 1 = " + SF.list[0].data.includes(true));
+	SF.list[0].data[1] = true;
+	console.log("SF.list[0] 2 = " + SF.list[0].data.includes(true));
+
+	
+	console.log("SF.list[0] 3 = " + SF.list[0].data[2]);
+	*/
+
+	//SF.list[0].value = true;
+	//console.log("SF.row[0][0] = " + SF.row[0][1].value);
 	
 	new_game();
 });
@@ -130,18 +179,18 @@ function create_table(){
 	
 	sizee = Number(document.getElementsByClassName('table_size')[0].value);
 	
-	field_rows_list = []
-	field_cols_list = [];
+	FRL_C = []
+	FCL_C = [];
 	field_cells_list = [];
 	field_cells_list_by_coord = [];
 	let c = 0;
 	let tr_cols = field_cols_parent.insertRow();
 	for (let i = 0; i < sizee; i++) {
-		field_rows_list[i] = field_row_prefab.cloneNode(true);
-		field_rows_parent.appendChild(field_rows_list[i]);
+		FRL_C[i] = field_row_prefab.cloneNode(true);
+		field_rows_parent.appendChild(FRL_C[i]);
 		
-		field_cols_list[i] = field_col_prefab.cloneNode(true);
-		tr_cols.appendChild(field_cols_list[i]);
+		FCL_C[i] = field_col_prefab.cloneNode(true);
+		tr_cols.appendChild(FCL_C[i]);
 		
 		field_cells_list_by_coord[i] = [];
 	}
@@ -193,40 +242,114 @@ function create_table(){
 		};
 		field_top_cell_parent.appendChild(field_top_cell_list[i].object);
 	}
+	
+	synthetic_field = {
+		list: [],
+		row: [],
+		col: []
+	};
 }
 }
 
+var FP_fixed_side_synth = FP_fixed_side;
+var FP_fixed_col_number_synth = FP_fixed_col_number;
+var FP_fixed_row_number_synth = FP_fixed_row_number;
+
 var my_missions = [];
+var synthetic_field;
 function CreateMissions() {
 	let sizes_of_mission = [2,3,4];
 	for(let i= 0; i < 3; i++) {
-		let obj2 = combin_row_prefab.cloneNode(true);
+		my_missions[i] = CreateOneMission(sizes_of_mission[i], i);
+	}
+}
+
+function CreateOneMission(sizes_of_mission, number_of_mission) {
+	//let field_bool1 = Object.assign([], field_bool);
+	//console.log("field_bool1 = [" + field_bool1.length + "][" + field_bool1[0].length + "]");
+
+	FP_fixed_side_synth = FP_fixed_side;
+	FP_fixed_col_number_synth = FP_fixed_col_number;
+	FP_fixed_row_number_synth = FP_fixed_row_number;
 	
-		let new_mission = {
+	
+	//buffer_size
+	
+	let val2 = [];
+	//let val3 = "";
+	//let val4 = "";
+	for(let j = 0; j < buffer_size; j++) {
+		let massive;
+		if (FP_fixed_side_synth == true) {
+			massive = synthetic_field.col[FP_fixed_col_number_synth].filter(function(element) {
+				return element.data[number_of_mission] == undefined;
+			});
+		} else {
+			massive = synthetic_field.row[FP_fixed_row_number_synth].filter(function(element) {
+				return element.data[number_of_mission] == undefined;
+			});
+			//FP_fixed_col_number_synth
+		}
+		//val4 += "["+(FP_fixed_side_synth ? 1 : 0)+" "+(FP_fixed_side_synth ? FP_fixed_col_number_synth : FP_fixed_row_number_synth)+" ("+massive.map(function (x) { return "["+(x.r+1)+","+(x.c+1)+"]-"+values[x.value]+"] "; }).join(',')+") ";
+		let rand_value = getRandomInt(0, massive.length);
+
+		let obj = massive.at(rand_value);
+		obj.data[number_of_mission] = true;
+
+		val2[j] = obj.value; //values[obj.value] + "["+(obj.r+1)+","+(obj.c+1)+"]"
+		//val3 += "["+(obj.r+1)+","+(obj.c+1)+"]-"+values[obj.value]+"] ";
+		//val4 += rand_value + "("+values[obj.value]+") ]\r\n";
+
+		if (FP_fixed_side_synth == true) {
+			FP_fixed_row_number_synth = obj.r;
+		} else {
+			FP_fixed_col_number_synth = obj.c;
+		}
+		FP_fixed_side_synth = !FP_fixed_side_synth;
+
+		//val2[j] = values[getRandomInt(0, values.length)];
+	}
+	//console.log("val3=( "+val3+" )\r\nval4=( \r\n"+val4+" )");
+
+	let offset = getRandomInt (0, (buffer_size - sizes_of_mission));
+	val2 = val2.slice(offset, offset + sizes_of_mission);
+	
+	
+
+	let h_v;
+	
+	/*let val1 = [];
+	for(let j = 0; j < sizes_of_mission; j++) {
+			val1[j] = getRandomInt(0, values.length);
+			//field_virtual[i][j]
+	}*/
+	
+	let obj2 = combin_row_prefab.cloneNode(true);
+	
+	let new_mission = {
 			obj: obj2,
 			cells_parent: obj2.querySelector('.combin-cell-parent'),
 			cells: [],
 			value: [],
 			stage: 0,
 			complited: false,
+			tracing: false,
+			win: -1,
 			
 			text_test: obj2.querySelector('#combin-text1')
-		};
-		combin_body.appendChild(new_mission.obj);
+	};
+	combin_body.appendChild(new_mission.obj);
 		
-		for(let j = 0; j < sizes_of_mission[i]; j++) {
+	for(let j = 0; j < sizes_of_mission; j++) {
 			new_mission.cells[j] = combin_cell_prefab.cloneNode(true);
-			let val = getRandomInt(0, values.length);
-			
-			new_mission.value[j] = val;
-			new_mission.cells[j].innerHTML = values[val];
-			new_mission.cells[j].style.content = '\"' + val + '\"' ;
+			new_mission.value[j] = val2[j]; // val2
+			new_mission.cells[j].innerHTML = values[val2[j]]; // val2
+			new_mission.cells[j].style.content = '\"' + val2[j] + '\"' ; // val2
 			
 			new_mission.cells_parent.appendChild(new_mission.cells[j]);
-		}
-		
-		my_missions[i] = new_mission;
 	}
+		
+	return new_mission;
 }
 
 function MissionsClickEvent(valuee) {
@@ -234,24 +357,80 @@ function MissionsClickEvent(valuee) {
 	field_top_cell_list[field_top_cell_active].line_.classList.remove("top-blink");
 	field_top_cell_active++;
 	
+	let c = 0;
 	my_missions.forEach((missions_a) => {
 		if (missions_a.complited == false) {
+			if ((missions_a.value[missions_a.stage] != valuee) & (missions_a.stage > 0)) {
+				missions_a.cells.forEach((cell_a) => {
+					cell_a.classList.toggle("combin-cell-correct", false);
+				});
+				missions_a.stage = 0;
+
+				/*if (missions_a.tracing) {
+					//НЕуспешное завершение миссии
+				}*/
+			}
+
+
 			if (missions_a.value[missions_a.stage] == valuee) {
+				//подсвечивание ячеек миссии
 				missions_a.cells[missions_a.stage].classList.toggle("combin-cell-correct", true);
 				missions_a.stage++;
 				
 				if (missions_a.stage == missions_a.value.length) {
+					//успешное завершение миссии
 					missions_a.complited = true;
 					missions_a.text_test.innerHTML = "Завершено!";
 				}
-			} else {
-				if (missions_a.stage > 0) {
-					missions_a.cells.forEach((cell_a) => {
-						cell_a.classList.toggle("combin-cell-correct", false);
-					});
-					missions_a.stage = 0;
-				}
 			}
+
+
+			if ((missions_a.value.length - missions_a.stage) > (buffer_size - field_top_cell_active)) {
+				missions_a.complited = true;
+				missions_a.text_test.innerHTML = "Не завершено!";
+			} else if ((((missions_a.value.length - missions_a.stage) < (buffer_size - field_top_cell_active)) == false) &&
+			((missions_a.value.length - missions_a.stage) == (buffer_size - field_top_cell_active))) {
+				if (missions_a.tracing == false) {
+					missions_a.tracing = true;
+
+
+
+					/*
+				FP_fixed_side_synth = FP_fixed_side;
+				FP_fixed_col_number_synth = FP_fixed_col_number;
+				FP_fixed_row_number_synth = FP_fixed_row_number;
+				*/
+
+				/*
+				for (let a = 0; a < (missions_a.value.length - missions_a.stage); a++) {
+				
+				if (FP_fixed_side_synth == true) {
+						synthetic_field.col[FP_fixed_col_number].filter(function(element) {
+							return element.data.includes(number_of_mission) == false;
+						});
+					} else {
+						synthetic_field.row[FP_fixed_row_number]
+					}
+				}
+				*/
+				}
+
+
+				//а затем при непервой проверке сверять ячейки
+				if (missions_a.tracing == true) {
+					//удалять из списка последовательности, которые не соблюдены
+
+					//если доступных последовательностей оказалось ноль, то завершить миссию с провалом
+				}
+
+				//при первом достижении "границ", запустить поиск всех доступных последовательностей
+				
+				
+
+				
+				//console.log("CHECK END OF MISSION ["+c+"]");
+			}
+			c++;
 		}
 	});
 }
@@ -273,7 +452,68 @@ function test_function(){
 	
 }
 
+function GeneratePseudoNumberList() {
+	let percentes = [];
+	for (let i = 0; i < values.length; i++) {
+		percentes[i] = {
+			number: i,
+			percent: 100
+		};
+	}
+
+	let cap = 66.6;
+	let randomize_values = 1.5; //1 - все элементы будут в максимально равном количестве, чем больше - тем больше может быть разница (больше 20 - абсолютный рандом)
+	let count_of_randomize = 2; //количество сгенерированных чисел, для поиска наименьшего (левого) значения
+
+	//console.log("summ = ("+(percentes.map(function(elem){ return elem.percent;}).reduce((accumulator, curr) => accumulator + curr))+")");
+
+	let my_list = [];
+	let prev_percent, summ, random_value, actual_percent;
+	let percent_reduce_value = 100 / (((sizee*sizee) / values.length)*1.5);
+	
+	//console.log("percent_reduce_value="+percent_reduce_value+"");
+	for (let i = 0; i < (sizee*sizee); i++) {
+		let rand_massive = [];
+		for (let l = 0; l < count_of_randomize; l++) {
+			rand_massive[l] = getRandomFloat(0, cap);
+		}
+		random_value = Math.min(...rand_massive); //Math.min(getRandomFloat(0, cap), getRandomFloat(0, cap));
+
+		prev_percent = 0;
+		summ = (percentes.map(function(elem){ return elem.percent;}).reduce((accumulator, curr) => accumulator + curr)) + 0.0;
+		//console.log("["+i+"] summ="+summ+"");
+		let j;
+		for (j = 0; j < values.length; j++) {
+			actual_percent = (100 * (percentes[j].percent/summ));
+			
+			if ((random_value >= prev_percent) & (random_value <= (prev_percent + actual_percent))) {
+				break;
+			}
+			prev_percent += actual_percent;
+		}
+		
+		//console.log("{"+random_value.toFixed(2)+"}\tpercentes =[ " + percentes.map(function(elem){ return "[" + elem.number + "]" + (100*(elem.percent/summ)).toFixed(2);}).join(' \t') + " ]"); //
+
+		my_list[i] = percentes[j].number;
+		percentes[j].percent -= percent_reduce_value;
+		if (percentes[j].percent < 0)
+			percentes[j].percent = 0;
+		//console.log("["+i+", "+j+"] random_value=( "+random_value+" ) prev_percent=( "+prev_percent+" ) max=( "+(prev_percent + actual_percent)+" ) test=( "+percentes[j].number+", "+percentes[j].percent+" )");
+		//console.log("break !!!");
+
+		percentes.sort(function(obj1, obj2) { return obj2.percent - obj1.percent; });
+	}
+
+	my_list = my_list.sort(function(){ return Math.random() - 0.5; });
+
+	return my_list;
+
+	//console.log("my_list test = [" + my_list.join(' , ') + "]"); //.map(function(elem){ return elem.name;})
+}
+
 var game_created;
+
+var field_virtual;
 function new_game(){
 	if (FP_enabled == true) {
 		end_game();
@@ -287,28 +527,40 @@ function new_game(){
 	
 	active_sheet.innerHTML = ".ground_cell { cursor: cell;}";
 	
-	let type_count = [];
+	let my_list = GeneratePseudoNumberList();
+	/*for (let i = 0; i < (sizee*sizee); i++) {
+		my_list[i] = getRandomInt(0, values.length);
+	}*/
+
+	field_virtual = [];
+	let k = 0;
+	for (let i = 0; i < sizee; i++) {
+		field_virtual[i] = [];
+    	for (let j = 0; j < sizee; j++) {
+			field_virtual[i][j] = my_list[k];
+			k++;
+		}
+	}
 	
+	let type_count = [];
 	for (let i = 0; i < sizee; i++) {
     	for (let j = 0; j < sizee; j++) {
-			let val = getRandomInt(0, values.length);
-			
 			let obj = field_cells_list_by_coord[i][j];
 			
-			obj.value = val;
+			obj.value = field_virtual[i][j];
 			obj.b_border.classList.toggle('ground_cell_text', false);
 			obj.chosen = false;
 			
-			if (field_cells_list_by_id[val] == undefined)
+			if (field_cells_list_by_id[field_virtual[i][j]] == undefined)
 			{
-				field_cells_list_by_id[val] = [];
-				type_count[val] = 0;
+				field_cells_list_by_id[field_virtual[i][j]] = [];
+				type_count[field_virtual[i][j]] = 0;
 			}
-			//console.log(`field_cells_list_by_id[${val}][${type_count[val]}] = ${obj}`);
-			field_cells_list_by_id[val][type_count[val]] = obj;
-			type_count[val]++;
+			//console.log(`field_cells_list_by_id[${field_virtual[i][j]}][${type_count[field_virtual[i][j]]}] = ${obj}`);
+			field_cells_list_by_id[field_virtual[i][j]][type_count[field_virtual[i][j]]] = obj;
+			type_count[field_virtual[i][j]]++;
 			
-         	obj.b_border.innerHTML = values[val];
+         	obj.b_border.innerHTML = values[field_virtual[i][j]];
 		}
 		
 	}
@@ -339,6 +591,27 @@ function new_game(){
 	strange_func(true);
 	
 	//active_sheet.innerHTML = ".ground_cell { cursor: cell;}";
+
+	k = 0;
+	for(let i = 0; i < sizee; i++) {
+		for(let j = 0; j < sizee; j++) {
+			if (i == 0) {
+				synthetic_field.row[j] = [];
+				synthetic_field.col[j] = [];
+			}
+			synthetic_field.list[k] = {
+				r: i,
+				c: j,
+				value: field_cells_list_by_coord[i][j].value,
+				data: []
+			};
+
+			synthetic_field.row[i][j] = synthetic_field.list[k];
+			synthetic_field.col[j][i] = synthetic_field.list[k];
+
+			k++;
+		}
+	}
 	
 	DeleteMissions();
 	
@@ -369,7 +642,7 @@ function end_game(){
 	
 	//active_sheet.innerHTML = ".ground_cell { cursor: default; pointer-events: 'none';}";
 	
-	console.log('game is ended 6 !');
+	//console.log('game is ended 6 !');
 }
 
 function strange_func (enable, extra = false) {
@@ -480,13 +753,13 @@ function RowColBackground(enter_or_exit, r, c, by_clicked, is_chosen) {
 
 function RowColSimpleFunction(r, c, r_state, c_state) {
 	if (r_state == false)
-		field_rows_list[r].style.removeProperty('opacity');
+		FRL_C[r].style.removeProperty('opacity');
 	else
-		field_rows_list[r].style.opacity = '1';
+		FRL_C[r].style.opacity = '1';
 	if (c_state == false)
-		field_cols_list[c].style.removeProperty('opacity');
+		FCL_C[c].style.removeProperty('opacity');
 	else
-		field_cols_list[c].style.opacity = '1';		
+		FCL_C[c].style.opacity = '1';		
 }
 
 	
@@ -556,8 +829,8 @@ function mouseclickF(event) {
 		
 		MissionsClickEvent(focused_cell_click.value);
 		
-		if ((field_top_cell_active + 1) > field_top_cell_list.length) { // "или" (проверка возможности закрыть оставшиеся комбинации)
-			console.log('game is ended by end of buffer');
+		if ((field_top_cell_active + 1) > field_top_cell_list.length) {
+			//console.log('game is ended by end of buffer');
 			end_game();
 		} else {
 			FP_fixed_side = !FP_fixed_side;
@@ -569,6 +842,12 @@ function mouseclickF(event) {
 			}
 			
 			RowColFunc(true, selected_obj);
+		}
+
+		if (my_missions.filter(d => d.complited == false).length == 0) {
+			RowColFunc(false, selected_obj);
+
+			end_game();
 		}
 		}
 	} 	

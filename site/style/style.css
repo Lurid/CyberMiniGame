@@ -166,8 +166,10 @@ text {
 
 input {
   border-style: none;
-    font-size: 29px;
-    font-family: system-ui;
+  /*font-family: system-ui;*/
+  font-family: Rajdhani;
+  font-weight: 700;
+  font-size: 29px;
   font-weight: inherit;
   color: inherit;
   background-color: transparent;
@@ -569,7 +571,7 @@ table {
 }
 
 .misson-text1 {
-  font-weight: 500;
+	font-weight: 500;
     font-size: 20px;
     font-family: system-ui;
     padding-bottom: 1px;
@@ -631,4 +633,14 @@ table {
 
 #combin-row-prefab {
 	height: 68px;
+}
+
+.my-footer {
+	font-size: calc(0.8vh + 0.8vw); /*clamp(1rem, 2.5vw, 1.5rem); 1.6wv;*/
+	position: fixed;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--main-color3);
+	z-index: 255;
 }

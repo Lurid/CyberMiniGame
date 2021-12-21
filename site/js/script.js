@@ -165,6 +165,9 @@ document.addEventListener("DOMContentLoaded", function(){
 	//SF.list[0].value = true;
 	//console.log("SF.row[0][0] = " + SF.row[0][1].value);
 	
+	document.cookie = "user=John;";
+	console.log("cookie=(" + document.cookie + ")");
+
 	new_game();
 });
 
@@ -336,7 +339,8 @@ function CreateOneMission(sizes_of_mission, number_of_mission) {
 			tracing: false,
 			win: -1,
 			
-			text_test: obj2.querySelector('#combin-text1')
+			mission_text: obj2.querySelector('#mission-text'),
+			mission_back: obj2.querySelector('#mission-back')
 	};
 	combin_body.appendChild(new_mission.obj);
 		
@@ -379,15 +383,13 @@ function MissionsClickEvent(valuee) {
 				
 				if (missions_a.stage == missions_a.value.length) {
 					//успешное завершение миссии
-					missions_a.complited = true;
-					missions_a.text_test.innerHTML = "Завершено!";
+					end_mission(missions_a, true);
 				}
 			}
 
 
 			if ((missions_a.value.length - missions_a.stage) > (buffer_size - field_top_cell_active)) {
-				missions_a.complited = true;
-				missions_a.text_test.innerHTML = "Не завершено!";
+				end_mission(missions_a, false);
 			} else if ((((missions_a.value.length - missions_a.stage) < (buffer_size - field_top_cell_active)) == false) &&
 			((missions_a.value.length - missions_a.stage) == (buffer_size - field_top_cell_active))) {
 				if (missions_a.tracing == false) {
@@ -432,7 +434,22 @@ function MissionsClickEvent(valuee) {
 			}
 			c++;
 		}
+
+		if (missions_a.complited == false && ((field_top_cell_active) == field_top_cell_list.length)) {
+			end_mission(missions_a, false);
+		}
 	});
+}
+
+function end_mission(mission, win) {
+	mission.complited = true;
+	if (win) {
+		mission.mission_text.innerHTML = "Complited!";
+		mission.mission_back.style.background = "lime";
+	} else {
+		mission.mission_text.innerHTML = "Not complited!";
+		mission.mission_back.style.background = "red";
+	}
 }
 
 function DeleteMissions() {
@@ -829,10 +846,7 @@ function mouseclickF(event) {
 		
 		MissionsClickEvent(focused_cell_click.value);
 		
-		if ((field_top_cell_active + 1) > field_top_cell_list.length) {
-			//console.log('game is ended by end of buffer');
-			end_game();
-		} else {
+		
 			FP_fixed_side = !FP_fixed_side;
 		
 			if (FP_fixed_side == false) {
@@ -842,7 +856,6 @@ function mouseclickF(event) {
 			}
 			
 			RowColFunc(true, selected_obj);
-		}
 
 		if (my_missions.filter(d => d.complited == false).length == 0) {
 			RowColFunc(false, selected_obj);

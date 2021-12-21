@@ -164,8 +164,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	//SF.list[0].value = true;
 	//console.log("SF.row[0][0] = " + SF.row[0][1].value);
-	
-	document.cookie = "user=John;";
+
+	let date = new Date(Date.now() + 86400e3);
+	date = date.toUTCString();
+	document.cookie = "user=John;expires=" + date;
 	console.log("cookie=(" + document.cookie + ")");
 
 	new_game();

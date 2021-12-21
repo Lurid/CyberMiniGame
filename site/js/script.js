@@ -48,6 +48,12 @@ function setCookie(name, value, options = {}) {
   document.cookie = updatedCookie;
 }
 
+function deleteCookie(name) {
+  setCookie(name, "", {
+    'max-age': -1
+  })
+}
+
 }
 
 
@@ -206,9 +212,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
 	let in_c = getCookie("in_count");
 
+	if ( isNaN(in_c)) {
+		in_c = 0;
+	}
+
 	in_c++;
 
-	setCookie("in_count", in_c);
+	setCookie("in_count", in_c, {'max-age': 3600});
 
 	console.log("cookie=(" + document.cookie + ")");
 
